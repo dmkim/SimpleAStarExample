@@ -3,7 +3,7 @@ A Simple A\* Path-Finding Example in C#
 
 A few weeks back, I needed a path-finding solution for a little home project of mine, a game in which a character must move from location to location without walking through walls or other obstacles. A bit of research showed that an algorithm called A\* (pronounced “A Star”) underpins most solutions to this problem—not just in games but also in other applications such as satellite navigation devices.
 
-![Header Image](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarHeader.jpg?raw=true)
+![Header Image](/Resources/Images/AStarHeader.jpg?raw=true)
 
 There must be thousands of pages on the Internet discussing this topic. The write-up I’ve used most frequently for guidance is Patrick Lester’s article, _[A\* Pathfinding for Beginners](https://web.archive.org/web/20170505034417/http://www.policyalmanac.org/games/aStarTutorial.htm "A* Pathfinding for Beginners")_. I’d recommend that article as a good place to get to grips with the fundamentals. The Wikipedia article, _[A\* search algorithm](https://web.archive.org/web/20170505034417/http://en.wikipedia.org/wiki/A*_search_algorithm "A* search algorithm on Wikipedia")_, is also a helpful resource.
 
@@ -16,7 +16,7 @@ I’ll start with a grid of `boolean`s, where `false` means the location is bloc
 
 Here’s a representation of my sample grid. It’s 7×5 and includes an L-shaped wall with a one-node-wide gap along the bottom.
 
-![A simple grid with a start and end location](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarInitialMap.png)
+![A simple grid with a start and end location](/Resources/Images/AStarInitialMap.png)
 
 _Figure 1: A simple grid with a start and end location_
 
@@ -40,17 +40,17 @@ Internally, the algorithm needs to hold a little more information about each nod
 
 Figure 2 gives a visual representation of how these values are calculated for the node immediately to the right of the start node. The distance along the path so far (G) is 1 step. Using Pythagoras’ theorem, the estimated distance from here to the end node (H) is 3 steps. Adding these two together gives the total estimated ‘cost’ in taking this path (F) of 4 steps.
 
-![Calculating G, H and F](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarFirstExampleStep.png)  
+![Calculating G, H and F](/Resources/Images/AStarFirstExampleStep.png)  
 _Figure 2: Calculating F, G and H_
 
 The calculations are repeated for each adjacent node.
 
-![The 'total estimated cost' (F) is calculated for each adjacent node](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarFirstAdjacentNodes.png)  
+![The 'total estimated cost' (F) is calculated for each adjacent node](/Resources/Images/AStarFirstAdjacentNodes.png)  
 _Figure 3: The ‘total estimated cost’ (F) is calculated for each adjacent node_
 
 Now that the F-value for each node is known, it can be used to work out which path to try out first by putting all the options in a list and sorting them by F. Clearly, the node at grid location 2,2 with F=4 is the best bet.
 
-![Adjacent nodes sorted by F-value](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarFirstStepList.png)  
+![Adjacent nodes sorted by F-value](/Resources/Images/AStarFirstStepList.png)  
 _Figure 4: The adjacent nodes are sorted in ascending order of F-value_
 
 This seems like a good place to introduce the `Search(...)` method that’s core to the implementation. The code listing below is incomplete but I’ll build upon it later. It shows the method taking `currentNode` as its starting point, getting a list of any adjacent nodes that are walkable, and then sorting the list by F-value before iterating over its contents.
@@ -71,7 +71,7 @@ So now the process is repeated using the node at location 2,2. However, there’
 
 Any nodes that have been added to an ‘adjacent nodes’ list like the one above are marked as ‘Open’, i.e. they’re considered an open option for the search. However, as soon as a node becomes part of a path, it’s marked as ‘Closed’ and it remains closed even if that path ends up being discarded. Marking a node as closed means it won’t be considered again.
 
-![The search moves first to the node with the lowest F-value](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarSecondExampleStep.png)  
+![The search moves first to the node with the lowest F-value](/Resources/Images/AStarSecondExampleStep.png)  
 _Figure 5: The search moves first to the node with the lowest F-value_
 
 In addition, every ‘Open’ node is given a reference to its ‘Parent’ node so that the path to get there can be traced back to the start. The starting node doesn’t have a parent.
@@ -154,7 +154,7 @@ This seems like a reasonable point to show the implementation of `GetAdjacentWal
 
 Applying the above code to the example scenario, it performs a ‘what-if’ calculation to determine whether it’s more efficient to reach any of the adjacent nodes via location 2,2 than via their existing parent. Note that H doesn’t need to be recalculated.
 
-![The adjacent nodes can be reached more efficiently via a different route](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarSecondExampleStepPart2.png)  
+![The adjacent nodes can be reached more efficiently via a different route](/Resources/Images/AStarSecondExampleStepPart2.png)  
 _Figure 6: The adjacent nodes can be reached more efficiently via a different route_
 
 It’s clear from these ‘what-if’ F-values that it’s less efficient to go via this node than via the starting node to reach any of the four locations accessible from 2,2.
@@ -186,29 +186,29 @@ If a dead end is detected, `Search(...)` simply returns `false` so that control 
 
 Returning to the search from the starting node, the next choice could be either at location 2,1 or at location 2,3 since they both have the same F-value and share #2 position in the list of adjacent nodes. For brevity’s sake, let’s assume the algorithm chooses the node at 2,1 next.
 
-![Try the next-best option](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarThirdExampleStep.png)  
+![Try the next-best option](/Resources/Images/AStarThirdExampleStep.png)  
 _Figure 7: Try the next-best option_
 
 The Open node at 1,1 is left alone since there’s no advantage going via this route. That leaves three possibilities, with the node at 3,0 achieving the lowest F-value.
 
-![Crossing the corner to location 3,0](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarFourthExampleStep.png)  
+![Crossing the corner to location 3,0](/Resources/Images/AStarFourthExampleStep.png)  
 _Figure 8: Crossing the corner to location 3,0_
 
 **Note**: This implementation permits the corners of obstacles to be crossed as shown in Figure 8. While it’s arguably valid in this situation, it probably wouldn’t be considered valid if there were an obstacle at location 2,0 (to the lower-left of the blue line). It’s worth considering how to deal with corners and diagonal obstacles if implementing A\*.
 
 From 3,0 there’s only one possible next node: the one at 4,0.
 
-![Crossing to location 4,0](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarFifthExampleStep.png)  
+![Crossing to location 4,0](/Resources/Images/AStarFifthExampleStep.png)  
 _Figure 9: Crossing to location 4,0_
 
 Of the two next options, crossing the corner to 5,1 is the best.
 
-![Crossing the corner to location 5,1](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarSixthExampleStep.png)  
+![Crossing the corner to location 5,1](/Resources/Images/AStarSixthExampleStep.png)  
 _Figure 10: Crossing the corner to location 5,1_
 
 There are now five options. Unsurprisingly, the node with the lowest F-value is also the finish node.
 
-![Reaching the finish node](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarSeventhExampleStep1.png)  
+![Reaching the finish node](/Resources/Images/AStarSeventhExampleStep1.png)  
 _Figure 11: Reaching the finish node_
 
 I’ll expand upon `Search(...)` one last time. The additional code checks whether the last node has been reached and returns `true` if it has. `GetAdjacentWalkableNodes(...)` has already set the parent node on the finish node, so nothing else needs to happen inside this method.
@@ -240,7 +240,7 @@ Compiling the Path
 
 Building a list of the nodes that comprise the path is simple: starting at the finish node, follow the line of ancestors, adding the location of each to a new list, until a `null` parent is reached (i.e. the start node has been reached).
 
-![Follow successive parent nodes to build the list of locations along the path](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarFollowParents.png)  
+![Follow successive parent nodes to build the list of locations along the path](/Resources/Images/AStarFollowParents.png)  
 _Figure 12: Follow successive parent nodes to build the list of locations along the path_
 
 The result is a list of locations running _backwards_ from the finish location to the start location. The list is reversed so that they can be returned in the correct order. It can all be wrapped up in a public method along these lines:
@@ -266,7 +266,7 @@ If a path isn’t found, it just returns an empty list, otherwise it returns a l
 
 The sample project includes a console application that shows the algorithm being run across three different grids: one that’s completely open; one with the L-shaped obstacle used in this walkthrough, and; one in which a wall prevents a path from being found.
 
-![Screenshot of the sample application](https://github.com/Faisal-Saleem/AStar/blob/master/Resources/Images/AStarConsoleAppScreenshot.png)  
+![Screenshot of the sample application](/Resources/Images/AStarConsoleAppScreenshot.png)  
 _Figure 13: Screenshot of the sample application_
 
 Final Notes
