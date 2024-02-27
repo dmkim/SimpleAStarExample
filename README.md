@@ -26,7 +26,7 @@ The above information will be used to initialise the path-finding class. I creat
     {
         public Point StartLocation { get; set; }
         public Point EndLocation { get; set; }
-        public bool\[,\] Map { get; set; }
+        public bool[,] Map { get; set; }
         ...
     }
 
